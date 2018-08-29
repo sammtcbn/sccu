@@ -20,7 +20,7 @@ install:
 	mkdir -p $(DESTDIR)/usr/lib
 	mkdir -p $(DESTDIR)/usr/include
 	cp -f $(FILENAME) $(DESTDIR)/usr/lib
-	cp -f libsccu.h $(DESTDIR)/usr/include
+	cp -f sccu.h $(DESTDIR)/usr/include
 	cd $(DESTDIR)/usr/lib ; \
 	ln -sf $(FILENAME) $(SONAME) ; \
 	ln -sf $(SONAME) $(SYMBONAME)
