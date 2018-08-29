@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <ctype.h>
+#include <time.h>
 
 #ifdef __linux__
 #include <unistd.h>
@@ -94,6 +96,34 @@ void SCCU_msleep (int ms)
 }
 
 
+void SCCU_localtime_get (char *str)
+{
+    //char *wday[]={"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+    time_t timep;
+    struct tm *p;
+    time (&timep);
+    p = localtime (&timep);
+    //sprintf (str, "%d-%02d-%02d %s %02d:%02d:%02d",
+    sprintf (str, "%d-%02d-%02d %02d:%02d:%02d",
+        1900 + p->tm_year,
+        1 + p->tm_mon,
+        p->tm_mday,
+        //wday[p->tm_wday],
+        p->tm_hour,
+        p->tm_min,
+        p->tm_sec);
+}
+
+
+void SCCU_str_upper (char *str)
+{
+	int i = 0, l = 0;
+	l = strlen(str);
+	for (i = 0; i < l; i++)
+		str[i] = toupper (str[i]);
+}
+
+
 void SCCU_str_trim (char *str)
 {
     int i,l=strlen(str);
@@ -112,6 +142,97 @@ void SCCU_str_trim (char *str)
 void SCCU_str_append_CRLF (char *str)
 {
     strcat (str, "\r\n");
+}
+
+
+// return 0  : correct format
+// return -1 : wrong format
+int SCCU_str_check_field_num (char *str, char delim, int fieldcnt, int start_location)
+{
+    int ptr = 0;
+    int delimiter_cnt = 0;
+    int len = strlen (str);
+    int i=0;
+    int max_delimiter_cnt = fieldcnt-1;
+    int field_size = 0;
+
+    if (start_location >= len)
+        return -1;
+
+    ptr += start_location;
+
+    while (ptr < len)
+    {
+        if (str[ptr] == delim)
+        {
+            if (field_size == 0)
+                return -1;
+
+            delimiter_cnt ++;
+            field_size = 0;
+        }
+        else
+        {
+            field_size++;
+        }
+        ptr++;
+    }
+
+    if (field_size == 0)
+        return -1;
+
+    if (delimiter_cnt != max_delimiter_cnt)
+        return -1;
+
+    return 0;
+}
+
+
+int SCCU_str_dilimiter_location (char *str, char delim, int num)
+{
+    int ptr = 0;
+    int delimiter_cnt = 0;
+    int len = 0;
+    len = strlen (str);
+    if (len <= 0)
+        return -1;
+    while (ptr < len)
+    {
+        if (str[ptr] == delim)
+        {
+            if (delimiter_cnt == num)
+                return ptr;
+            delimiter_cnt ++;
+        }
+        ptr++;
+    }
+    return -1;
+}
+
+
+int SCCU_int_setmask (int val, int bitNum, int bitwise)
+{
+	//fprintf (stderr, "val=%x, bitNum=%d, bitwise=%d\n", val, bitNum, bitwise);
+	if (bitwise == 1)
+		val |=  (0x1 << bitNum);
+	else if (bitwise == 0)
+		val &=  ~(0x1 << bitNum);
+	//fprintf (stderr, "val set to %x\n", val);
+	return val;
+}
+
+
+int SCCU_int_getbit (int val, int bitNum)
+{
+    return (val >> bitNum) & 0x1;
+}
+
+
+void SCCU_show_allbit (int val, int num)
+{
+    int i=0;
+    for (i=0;i<num;i++)
+        printf ("bit%d = %d\n", i, SCCU_int_getbit (val, i));
 }
 
 
