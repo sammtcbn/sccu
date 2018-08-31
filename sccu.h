@@ -31,9 +31,17 @@ void SCCU_show_allbit (int val, int num);
 char* SCCU_getCurrentDir (char *path);
 void SCCU_daemonlize (void);
 void SCCU_dump_sys_def_limit (void);
+int SCCU_is_file_exist (char const *filepath);
 int SCCU_pidfile_create (char *path);
 void SCCU_pidfile_remove (char *path);
 int SCCU_service_lock (char *lockfile);
 void SCCU_service_unlock (char *lockfile);
+long SCCU_get_uptime (void);
+
+#ifdef __linux__
+int SCCU_check_process_exists_by_pid (pid_t pid);
+int SCCU_get_mac_addr_WithoutColon (char *m_szStrBuf, char *m_szIfName, int len);
+int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len);
+#endif
 
 #endif // __SCCU_H__

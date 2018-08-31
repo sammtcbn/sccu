@@ -14,11 +14,18 @@
 #include <syslog.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <termios.h>
+#include <signal.h>
+#include <sys/sysinfo.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 #endif
 
 #ifdef WIN32
 #include <Windows.h>
 #include <direct.h>
+#include <io.h>
+#include <conio.h>
 #endif
 
 #include "sccu.h"
@@ -62,6 +69,24 @@ void SCCU_log (int level, const char *fmt, ...)
 #endif
 
     va_end(ap);
+}
+
+
+int SCCU_getch (void)
+{
+    int ch;
+#ifdef WIN32
+    ch = _getch();
+#else
+    struct termios oldt, newt;
+    tcgetattr (STDIN_FILENO, &oldt);
+    memcpy (&newt, &oldt, sizeof(newt));
+    newt.c_lflag &= ~( ECHO | ICANON | ECHOE | ECHOK | ECHONL | ECHOPRT | ECHOKE | ICRNL);
+    tcsetattr (STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr (STDIN_FILENO, TCSANOW, &oldt);
+#endif
+    return ch;
 }
 
 
@@ -272,6 +297,18 @@ void SCCU_dump_sys_def_limit (void)
 }
 
 
+int SCCU_is_file_exist (char const *filepath)
+{
+    if(NULL == filepath)
+        return 0;
+#ifdef WIN32
+    return _access(filepath, 0) == 0 ? 1 : 0;
+#else
+    return access(filepath, F_OK) == 0 ? 1 : 0;
+#endif
+}
+
+
 #ifdef __linux__
 int SCCU_pidfile_create (char *path)
 {
@@ -370,3 +407,120 @@ void SCCU_service_unlock (char *lockfile)
 #endif
     return;
 }
+
+
+long SCCU_get_uptime (void)
+{
+#ifdef __linux__
+    struct sysinfo s_info;
+    int error = sysinfo (&s_info);
+    if (error != 0)
+    {
+        //printf ("error code = %d\n", error);
+        return 0;
+    }
+    else
+    {
+        //printf ("uptime is %ld\n", s_info.uptime);
+        return s_info.uptime;
+    }
+#else
+    return 0;
+#endif
+}
+
+
+#ifdef __linux__
+int SCCU_check_process_exists_by_pid (pid_t pid)
+{
+    if (pid <= 0)
+        return 0;
+    return (kill(pid,0) == 0 || errno != ESRCH);
+}
+#endif
+
+
+#ifdef __linux__
+int SCCU_get_mac_addr_WithoutColon (char *m_szStrBuf, char *m_szIfName, int len)
+{
+    int m_Idx = 0;
+    int m_iLen = 0;
+    int fd;
+    struct ifreq ifr;
+
+    memset(&ifr, 0, sizeof(ifr));
+    memset (m_szStrBuf, 0, len);
+    if (len < 13)
+        return 0;
+
+    fd = socket (AF_INET, SOCK_DGRAM, 0);
+
+    ifr.ifr_addr.sa_family = AF_INET;
+    strncpy (ifr.ifr_name, m_szIfName, IFNAMSIZ-1);
+
+    if(ioctl (fd, SIOCGIFHWADDR, &ifr) < 0)
+    {
+        m_szStrBuf[0] = 0;
+        return 0;
+    }
+
+    close (fd);
+
+    sprintf (m_szStrBuf, "%.2x%.2x%.2x%.2x%.2x%.2x",
+        (unsigned char)ifr.ifr_hwaddr.sa_data[0],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[1],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[2],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[3],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[4],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[5]);
+
+    m_iLen = strlen (m_szStrBuf);
+    for(m_Idx = 0; m_Idx < m_iLen; m_Idx++)
+        m_szStrBuf[m_Idx] = toupper (m_szStrBuf[m_Idx]);
+
+    return m_iLen;
+}
+#endif
+
+
+#ifdef __linux__
+int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len)
+{
+    int m_Idx = 0;
+    int m_iLen = 0;
+    int fd;
+    struct ifreq ifr;
+
+    memset(&ifr, 0, sizeof(ifr));
+    memset (m_szStrBuf, 0, len);
+    if (len < 18)
+        return 0;
+
+    fd = socket (AF_INET, SOCK_DGRAM, 0);
+
+    ifr.ifr_addr.sa_family = AF_INET;
+    strncpy (ifr.ifr_name, m_szIfName, IFNAMSIZ-1);
+
+    if(ioctl (fd, SIOCGIFHWADDR, &ifr) < 0)
+    {
+        m_szStrBuf[0] = 0;
+        return 0;
+    }
+
+    close (fd);
+
+    sprintf (m_szStrBuf, "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x",
+        (unsigned char)ifr.ifr_hwaddr.sa_data[0],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[1],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[2],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[3],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[4],
+        (unsigned char)ifr.ifr_hwaddr.sa_data[5]);
+
+    m_iLen = strlen (m_szStrBuf);
+    for(m_Idx = 0; m_Idx < m_iLen; m_Idx++)
+        m_szStrBuf[m_Idx] = toupper (m_szStrBuf[m_Idx]);
+
+    return m_iLen;
+}
+#endif
