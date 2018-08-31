@@ -16,6 +16,7 @@
 void SCCU_logInit (char *ident);
 void SCCU_logRelease (void);
 void SCCU_log (int level, const char *fmt, ...);
+int SCCU_getch (void);
 void SCCU_pause (void);
 void SCCU_sleep (int sec);
 void SCCU_msleep (int ms);
