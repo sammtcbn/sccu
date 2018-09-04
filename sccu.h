@@ -5,6 +5,25 @@
 #ifndef __SCCU_H__
 #define __SCCU_H__
 
+#ifdef __linux__
+#include <unistd.h>
+#include <syslog.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <termios.h>
+#include <signal.h>
+#include <sys/sysinfo.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#endif
+
+#ifdef WIN32
+#include <Windows.h>
+#include <direct.h>
+#include <io.h>
+#include <conio.h>
+#endif
+
 #define SCCU_LEVEL_INFO 1
 #define SCCU_LEVEL_WARN 2
 #define SCCU_LEVEL_ERR  3
