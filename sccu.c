@@ -121,6 +121,55 @@ void SCCU_localtime_get (char *str)
 }
 
 
+void SCCU_gettimeofday (struct timeval *tp)
+{
+#ifdef __linux__
+    gettimeofday (tp, NULL);
+#else
+    uint64_t  intervals;
+    FILETIME  ft;
+
+    GetSystemTimeAsFileTime (&ft);
+
+    intervals = ((uint64_t) ft.dwHighDateTime << 32) | ft.dwLowDateTime;
+    intervals -= 116444736000000000;
+
+    tp->tv_sec = (long) (intervals / 10000000);
+    tp->tv_usec = (long) ((intervals % 10000000) / 10);
+#endif
+}
+
+
+long SCCU_getSysTimeFromEPOCH (void)
+{
+    struct timeval tp;
+    SCCU_gettimeofday (&tp);
+    return tp.tv_sec;
+}
+
+
+long SCCU_get_uptime (void)
+{
+#ifdef __linux__
+    struct sysinfo s_info;
+    int error = sysinfo (&s_info);
+    if (error != 0)
+    {
+        //printf ("error code = %d\n", error);
+        return 0;
+    }
+    else
+    {
+        //printf ("uptime is %ld\n", s_info.uptime);
+        return s_info.uptime;
+    }
+#else
+    // todo
+    return 0;
+#endif
+}
+
+
 void SCCU_str_upper (char *str)
 {
 	int i = 0, l = 0;
@@ -387,27 +436,6 @@ void SCCU_service_unlock (char *lockfile)
     SCCU_pidfile_remove (lockfile);
 #endif
     return;
-}
-
-
-long SCCU_get_uptime (void)
-{
-#ifdef __linux__
-    struct sysinfo s_info;
-    int error = sysinfo (&s_info);
-    if (error != 0)
-    {
-        //printf ("error code = %d\n", error);
-        return 0;
-    }
-    else
-    {
-        //printf ("uptime is %ld\n", s_info.uptime);
-        return s_info.uptime;
-    }
-#else
-    return 0;
-#endif
 }
 
 

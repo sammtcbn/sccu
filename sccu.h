@@ -14,6 +14,7 @@
 #include <signal.h>
 #include <sys/sysinfo.h>
 #include <sys/ioctl.h>
+#include <sys/time.h>
 #include <net/if.h>
 #endif
 
@@ -22,6 +23,7 @@
 #include <direct.h>
 #include <io.h>
 #include <conio.h>
+#include <stdint.h>
 #endif
 
 #define SCCU_LEVEL_INFO 1
@@ -40,6 +42,9 @@ void SCCU_pause (void);
 void SCCU_sleep (int sec);
 void SCCU_msleep (int ms);
 void SCCU_localtime_get (char *str);
+void SCCU_gettimeofday (struct timeval *tp);
+long SCCU_getSysTimeFromEPOCH (void);
+long SCCU_get_uptime (void);
 void SCCU_str_upper (char *str);
 void SCCU_str_trim (char *str);
 void SCCU_str_append_CRLF (char *str);
@@ -56,7 +61,6 @@ int SCCU_pidfile_create (char *path);
 void SCCU_pidfile_remove (char *path);
 int SCCU_service_lock (char *lockfile);
 void SCCU_service_unlock (char *lockfile);
-long SCCU_get_uptime (void);
 
 #ifdef __linux__
 int SCCU_check_process_exists_by_pid (pid_t pid);
