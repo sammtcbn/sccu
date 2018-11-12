@@ -104,20 +104,30 @@ void SCCU_msleep (int ms)
 
 void SCCU_localtime_get (char *str)
 {
-    //char *wday[]={"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+    static char timeStr[256] = {0};
+    static time_t oldt = 0;
     time_t timep;
-    struct tm *p;
-    time (&timep);
-    p = localtime (&timep);
-    //sprintf (str, "%d-%02d-%02d %s %02d:%02d:%02d",
-    sprintf (str, "%d-%02d-%02d %02d:%02d:%02d",
-        1900 + p->tm_year,
-        1 + p->tm_mon,
-        p->tm_mday,
-        //wday[p->tm_wday],
-        p->tm_hour,
-        p->tm_min,
-        p->tm_sec);
+    struct tm tms;
+    str[0] = 0;
+    timep = time (NULL);
+    if (oldt != timep)
+    {
+        timeStr[0] = 0;
+        localtime_r (&timep, &tms);
+#if 1   // method-1
+        strftime (timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", &tms);
+#else   // method-2
+        sprintf (timeStr, "%d-%02d-%02d %02d:%02d:%02d",
+            1900 + tms.tm_year,
+            1 + tms.tm_mon,
+            tms.tm_mday,
+            tms.tm_hour,
+            tms.tm_min,
+            tms.tm_sec);
+#endif
+        oldt = timep;
+    }
+    strcpy (str, timeStr);
 }
 
 
