@@ -113,7 +113,13 @@ void SCCU_localtime_get (char *str)
     if (oldt != timep)
     {
         timeStr[0] = 0;
+
+#ifdef __linux__
         localtime_r (&timep, &tms);
+#else   // windows
+        localtime_s (&tms, &timep);
+#endif
+
 #if 1   // method-1
         strftime (timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", &tms);
 #else   // method-2
@@ -125,6 +131,7 @@ void SCCU_localtime_get (char *str)
             tms.tm_min,
             tms.tm_sec);
 #endif
+
         oldt = timep;
     }
     strcpy (str, timeStr);
