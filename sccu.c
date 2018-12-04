@@ -189,8 +189,9 @@ long SCCU_get_uptime (void)
 
 int SCCU_str_count_letter (char *str, char s)
 {
-    int cnt=0, i=0;
-    for (i=0;i<strlen(str);i++)
+    int cnt=0, i=0 , len=0;
+    len = (int) strlen (str);
+    for (i=0;i<len;i++)
     {
         if (str[i] == s)
             cnt++;
