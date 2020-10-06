@@ -28,7 +28,7 @@ install:
 clean:
 	rm -f *.o libsccu.so* $(ALL_SAMPLE_BIN)
 
-ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get ex06_str_random ex07_str_combine_path_file ex08_str_array ex09_str_split_to_array ex10_is_process_running
+ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get ex06_str_random ex07_str_combine_path_file ex08_str_array ex09_str_split_to_array ex10_is_process_running ex11_uptime_get
 
 sample: $(ALL_SAMPLE_BIN)
 
@@ -80,4 +80,9 @@ ex09_str_split_to_array.o: ex09_str_split_to_array.c
 ex10_is_process_running: ex10_is_process_running.o sccu.o
 	$(CC) $(LDFLAGS) -o $@ $^
 ex10_is_process_running.o: ex10_is_process_running.c
+	$(CC) $(CFLAGS) -c $<
+
+ex11_uptime_get: ex11_uptime_get.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex11_uptime_get.o: ex11_uptime_get.c
 	$(CC) $(CFLAGS) -c $<

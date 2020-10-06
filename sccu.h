@@ -64,7 +64,7 @@ void SCCU_msleep (int ms);
 void SCCU_localtime_get (char *str);
 void SCCU_gettimeofday (struct timeval *tp);
 long SCCU_getSysTimeFromEPOCH (void);
-long SCCU_get_uptime (void);
+long SCCU_uptime_get (void);
 int SCCU_str_count_letter (char *str, char s);
 void SCCU_str_upper (char *str);
 void SCCU_str_trim (char *str);

@@ -165,7 +165,7 @@ long SCCU_getSysTimeFromEPOCH (void)
 }
 
 
-long SCCU_get_uptime (void)
+long SCCU_uptime_get (void)
 {
 #ifdef __linux__
     struct sysinfo s_info;
