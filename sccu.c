@@ -549,11 +549,21 @@ void SCCU_service_unlock (char *lockfile)
 
 
 #ifdef __linux__
-int SCCU_check_process_exists_by_pid (pid_t pid)
+// return 1, running
+// return 0, not running
+int SCCU_is_process_running (pid_t pid)
 {
+    int result=0;
     if (pid <= 0)
         return 0;
-    return (kill(pid,0) == 0 || errno != ESRCH);
+    //return (kill(pid,0) == 0 || errno != ESRCH);
+    result = kill(pid, 0);
+    if (result == 0)
+        result = 1;
+    else
+        result = 0;
+
+    return result;
 }
 #endif
 

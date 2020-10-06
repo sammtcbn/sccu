@@ -90,7 +90,7 @@ int SCCU_service_lock (char *lockfile);
 void SCCU_service_unlock (char *lockfile);
 
 #ifdef __linux__
-int SCCU_check_process_exists_by_pid (pid_t pid);
+int SCCU_is_process_running (pid_t pid);
 int SCCU_get_mac_addr_WithoutColon (char *m_szStrBuf, char *m_szIfName, int len);
 int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len);
 #endif
