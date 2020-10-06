@@ -295,6 +295,24 @@ int SCCU_str_dilimiter_location (char *str, char delim, int num)
 }
 
 
+// ref to https://www.linux.org/threads/how-do-i-reverse-a-string-in-c.12069/
+void SCCU_str_reverse (char *str)
+{
+    char temp = '\0';
+    size_t i = 0;
+    size_t j = strlen(str) - 1; /* Point to the last char in the string. */
+
+    while(i < j)
+    {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+        i++;
+        j--;
+    }
+}
+
+
 int SCCU_int_setmask (int val, int bitNum, int bitwise)
 {
 	//fprintf (stderr, "val=%x, bitNum=%d, bitwise=%d\n", val, bitNum, bitwise);

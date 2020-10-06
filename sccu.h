@@ -51,6 +51,7 @@ void SCCU_str_trim (char *str);
 void SCCU_str_append_CRLF (char *str);
 int SCCU_str_check_field_num (char *str, char delim, int fieldcnt, int start_location);
 int SCCU_str_dilimiter_location (char *str, char delim, int num);
+void SCCU_str_reverse (char *str);
 int SCCU_int_setmask (int val, int bitNum, int bitwise);
 int SCCU_int_getbit (int val, int bitNum);
 void SCCU_show_allbit (int val, int num);
