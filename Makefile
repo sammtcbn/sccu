@@ -1,4 +1,4 @@
-all: libsccu
+all: libsccu sample
 
 SYMBONAME = libsccu.so
 MAJOR = .1
@@ -26,4 +26,13 @@ install:
 	ln -sf $(SONAME) $(SYMBONAME)
 
 clean:
-	rm -f *.o libsccu.so*
+	rm -f *.o libsccu.so* $(ALL_SAMPLE_BIN)
+
+ALL_SAMPLE_BIN=ex01_getlocaltime
+
+sample: $(ALL_SAMPLE_BIN)
+
+ex01_getlocaltime: ex01_getlocaltime.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex01_getlocaltime.o: ex01_getlocaltime.c
+	$(CC) $(CFLAGS) -c $<
