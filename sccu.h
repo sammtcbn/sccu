@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <termios.h>
 #include <signal.h>
+#include <limits.h>
 #include <sys/sysinfo.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
@@ -25,6 +26,7 @@
 #include <conio.h>
 #include <stdint.h>
 #endif
+
 
 #define SCCU_LEVEL_INFO 1
 #define SCCU_LEVEL_WARN 2
@@ -42,6 +44,14 @@
 
 #ifdef __linux__
 #define MAX_PATH    260
+#endif
+
+#ifdef __linux__
+#define SCCU_HOST_NAME_MAX_LEN HOST_NAME_MAX
+#elif _WIN32
+#define SCCU_HOST_NAME_MAX_LEN MAX_COMPUTERNAME_LENGTH
+#else
+#define SCCU_HOST_NAME_MAX_LEN 254
 #endif
 
 void SCCU_logInit (char *ident);
@@ -81,5 +91,6 @@ int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len);
 #endif
 
 void SCCU_get_module_path (char *fpath);
+void SCCU_hostname_get (char *name);
 
 #endif // __SCCU_H__

@@ -609,3 +609,16 @@ void SCCU_get_module_path (char *fpath)
     }
 #endif
 }
+
+
+void SCCU_hostname_get (char *name)
+{
+#ifdef __linux__
+    memset (name, 0 , SCCU_HOST_NAME_MAX_LEN + 1);
+    gethostname (name, SCCU_HOST_NAME_MAX_LEN);
+#elif _WIN32
+    unsigned long Size = SCCU_HOST_NAME_MAX_LEN;
+    memset (name, 0 , SCCU_HOST_NAME_MAX_LEN + 1);
+    GetComputerName(name, &Size);
+#endif
+}
