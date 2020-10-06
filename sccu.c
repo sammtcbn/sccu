@@ -330,6 +330,17 @@ void SCCU_str_random (char *tmp_s, int len)
 }
 
 
+void SCCU_str_combine_path_file (char* destination, char* path, char* filename)
+{
+    char separator=FILE_SEPARATOR;
+    if (destination == NULL || path == NULL || filename == NULL)
+        return;
+    if (strlen (path) + strlen (filename) + 1 > MAX_PATH)
+        return;
+    sprintf (destination, "%s%c%s", path, separator, filename);
+}
+
+
 int SCCU_int_setmask (int val, int bitNum, int bitwise)
 {
 	//fprintf (stderr, "val=%x, bitNum=%d, bitwise=%d\n", val, bitNum, bitwise);
