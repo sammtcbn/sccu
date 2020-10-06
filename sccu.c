@@ -561,8 +561,10 @@ int SCCU_is_process_running (pid_t pid)
     if (result == 0)
         result = 1;
     else
+    {
+        perror("kill()");
         result = 0;
-
+    }
     return result;
 }
 #endif
