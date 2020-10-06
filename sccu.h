@@ -76,6 +76,7 @@ void SCCU_str_random (char *tmp_s, int len);
 void SCCU_str_combine_path_file (char* destination, char* path, char* filename);
 void SCCU_str_array_null (char **arr, int maxArrayElement);
 void SCCU_str_array_showeach (char **arr, int maxArrayElement);
+void SCCU_str_split_to_array (char **arr, char *str, const char *delimiter, int maxArrayElement);
 int SCCU_int_setmask (int val, int bitNum, int bitwise);
 int SCCU_int_getbit (int val, int bitNum);
 void SCCU_show_allbit (int val, int num);

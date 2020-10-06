@@ -357,6 +357,23 @@ void SCCU_str_array_showeach (char **arr, int maxArrayElement)
 }
 
 
+void SCCU_str_split_to_array (char **arr, char *str, const char *delimiter, int maxArrayElement)
+{
+    char *pch;
+    int cnt=0;
+
+    pch = strtok(str, delimiter);
+    while(pch != NULL)
+    {
+        *arr++ = pch;
+        cnt++;
+        if (cnt == maxArrayElement)
+            break;
+        pch = strtok(NULL, delimiter);
+    }
+}
+
+
 int SCCU_int_setmask (int val, int bitNum, int bitwise)
 {
 	//fprintf (stderr, "val=%x, bitNum=%d, bitwise=%d\n", val, bitNum, bitwise);
