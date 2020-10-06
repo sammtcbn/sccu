@@ -28,7 +28,7 @@ install:
 clean:
 	rm -f *.o libsccu.so* $(ALL_SAMPLE_BIN)
 
-ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get
+ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get ex06_str_random
 
 sample: $(ALL_SAMPLE_BIN)
 
@@ -55,4 +55,9 @@ ex04_get_module_path.o: ex04_get_module_path.c
 ex05_hostname_get: ex05_hostname_get.o sccu.o
 	$(CC) $(LDFLAGS) -o $@ $^
 ex05_hostname_get.o: ex05_hostname_get.c
+	$(CC) $(CFLAGS) -c $<
+
+ex06_str_random: ex06_str_random.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex06_str_random.o: ex06_str_random.c
 	$(CC) $(CFLAGS) -c $<

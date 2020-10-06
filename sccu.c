@@ -313,6 +313,23 @@ void SCCU_str_reverse (char *str)
 }
 
 
+void SCCU_str_random (char *tmp_s, int len)
+{
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    srand( (unsigned) time(NULL) * getpid());
+
+    for (int i = 0; i < len; ++i)
+    {
+        tmp_s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+    tmp_s[len] = 0;
+}
+
+
 int SCCU_int_setmask (int val, int bitNum, int bitwise)
 {
 	//fprintf (stderr, "val=%x, bitNum=%d, bitwise=%d\n", val, bitNum, bitwise);
