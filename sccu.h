@@ -34,6 +34,16 @@
 #define SCCU_LogWarn(x, ...)  SCCU_log(SCCU_LEVEL_WARN, x, ##__VA_ARGS__);
 #define SCCU_LogError(x, ...) SCCU_log(SCCU_LEVEL_ERR,  x, ##__VA_ARGS__);
 
+#ifdef WIN32
+#define FILE_SEPARATOR  '\\'
+#else
+#define FILE_SEPARATOR  '/'
+#endif
+
+#ifdef __linux__
+#define MAX_PATH    260
+#endif
+
 void SCCU_logInit (char *ident);
 void SCCU_logRelease (void);
 void SCCU_log (int level, const char *fmt, ...);
@@ -69,5 +79,7 @@ int SCCU_check_process_exists_by_pid (pid_t pid);
 int SCCU_get_mac_addr_WithoutColon (char *m_szStrBuf, char *m_szIfName, int len);
 int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len);
 #endif
+
+void SCCU_get_module_path (char *fpath);
 
 #endif // __SCCU_H__

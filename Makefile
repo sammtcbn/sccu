@@ -28,7 +28,7 @@ install:
 clean:
 	rm -f *.o libsccu.so* $(ALL_SAMPLE_BIN)
 
-ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse
+ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path
 
 sample: $(ALL_SAMPLE_BIN)
 
@@ -45,4 +45,9 @@ ex02_getch.o: ex02_getch.c
 ex03_str_reverse: ex03_str_reverse.o sccu.o
 	$(CC) $(LDFLAGS) -o $@ $^
 ex03_str_reverse.o: ex03_str_reverse.c
+	$(CC) $(CFLAGS) -c $<
+
+ex04_get_module_path: ex04_get_module_path.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex04_get_module_path.o: ex04_get_module_path.c
 	$(CC) $(CFLAGS) -c $<

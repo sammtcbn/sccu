@@ -581,3 +581,31 @@ int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len)
     return m_iLen;
 }
 #endif
+
+
+void SCCU_get_module_path (char *fpath)
+{
+    memset (fpath, 0, MAX_PATH);
+#ifdef _WIN32
+    GetModuleFileName (NULL, fpath, MAX_PATH);
+    (strrchr(fpath, '\\'))[0] = 0;
+#else
+    int idx = 0;
+    char * lastSlash = NULL;
+    char tempPath[MAX_PATH] = {0};
+
+    readlink("/proc/self/exe", tempPath, sizeof(tempPath));
+
+    if (access(tempPath, F_OK) == 0)
+    {
+        lastSlash = strrchr(tempPath, FILE_SEPARATOR);
+        if(NULL != lastSlash)
+        {
+            idx = lastSlash - tempPath + 1;
+            memcpy(fpath, tempPath, idx);
+            fpath[idx] = '\0';
+        }
+        (strrchr(fpath, FILE_SEPARATOR))[0] = 0;
+    }
+#endif
+}

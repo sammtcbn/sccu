@@ -12,7 +12,7 @@ int main (void)
 
 /* Result:
 
-$ ./str_reverse
+$ ./ex03_str_reverse
 origin  str = [123 abc]
 reverse str = [cba 321]
 
