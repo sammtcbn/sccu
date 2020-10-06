@@ -340,6 +340,22 @@ void SCCU_str_combine_path_file (char* destination, char* path, char* filename)
     sprintf (destination, "%s%c%s", path, separator, filename);
 }
 
+void SCCU_str_array_null (char **arr, int maxArrayElement)
+{
+    int i=0;
+    for (i=0;i<maxArrayElement;i++)
+        *(arr+i) = NULL;
+}
+
+void SCCU_str_array_showeach (char **arr, int maxArrayElement)
+{
+    int i=0;
+    for (i=0;i<maxArrayElement;i++)
+    {
+        printf("[%d] %s\n", i, *(arr+i));
+    }
+}
+
 
 int SCCU_int_setmask (int val, int bitNum, int bitwise)
 {
