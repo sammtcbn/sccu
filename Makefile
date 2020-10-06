@@ -28,11 +28,16 @@ install:
 clean:
 	rm -f *.o libsccu.so* $(ALL_SAMPLE_BIN)
 
-ALL_SAMPLE_BIN=ex01_getlocaltime
+ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch
 
 sample: $(ALL_SAMPLE_BIN)
 
-ex01_getlocaltime: ex01_getlocaltime.o sccu.o
+ex01_localtime_get: ex01_localtime_get.o sccu.o
 	$(CC) $(LDFLAGS) -o $@ $^
-ex01_getlocaltime.o: ex01_getlocaltime.c
+ex01_localtime_get.o: ex01_localtime_get.c
+	$(CC) $(CFLAGS) -c $<
+
+ex02_getch: ex02_getch.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex02_getch.o: ex02_getch.c
 	$(CC) $(CFLAGS) -c $<
