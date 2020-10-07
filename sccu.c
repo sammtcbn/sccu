@@ -9,6 +9,10 @@
 #include <ctype.h>
 #include <time.h>
 
+#ifdef __linux__
+#include <sys/wait.h>
+#endif
+
 #include "sccu.h"
 
 
@@ -571,6 +575,21 @@ int SCCU_is_process_running (pid_t pid)
 
 
 #ifdef __linux__
+void SCCU_process_kill(pid_t pid)
+{
+    if (pid == -1)
+        return;
+    else
+    {
+        int status;
+        kill(pid, SIGABRT);
+        wait(&status); /* Wait for the child to terminate. */
+    }
+}
+#endif
+
+
+#ifdef __linux__
 int SCCU_get_mac_addr_WithoutColon (char *m_szStrBuf, char *m_szIfName, int len)
 {
     int m_Idx = 0;
@@ -695,3 +714,56 @@ void SCCU_hostname_get (char *name)
     GetComputerName(name, &Size);
 #endif
 }
+
+
+#ifdef __linux__
+int SCCU_process_launch (pid_t *child_pid, char *processPath, char *processName, char *parameter)
+{
+    #define MAX_ARRAY_ELEMENT 20
+
+    pid_t pid;
+    char *arr[MAX_ARRAY_ELEMENT];
+    const char *delimiter = " ";
+
+    pid=fork();
+    if(pid>0)
+    {
+        //fprintf(stderr, "[%d] I'm Parent\n", getpid());   // for debug
+    }
+    else if(pid==0)
+    {
+        char fullpath [MAX_PATH];
+
+        //fprintf(stderr, "[%d] I'm Child\n", getpid());    // for debug
+        SCCU_str_combine_path_file (fullpath, processPath, processName);
+        SCCU_str_array_null (arr, MAX_ARRAY_ELEMENT);
+        *arr = processName;
+        SCCU_str_split_to_array (arr+1, parameter, delimiter, MAX_ARRAY_ELEMENT);
+
+        //fprintf(stderr, "[%d] fullpath is %s\n", getpid(), fullpath);    // for debug
+
+        //SCCU_str_array_showeach (arr, MAX_ARRAY_ELEMENT);     // for debug
+
+        if (execv(fullpath, arr)<0)
+        {
+            perror("child execv()");
+            exit (-1);
+        }
+        fprintf(stderr, "[%d] after execv\n", getpid());
+    }
+    else
+    {
+        perror("fork()");
+        return -1;
+    }
+
+    //fprintf(stderr, "[%d] after fork, my child pid is %d\n", getpid(), pid);  // for debug
+
+    if(pid>0)
+    {
+        *child_pid = pid;
+    }
+
+    return 1;
+}
+#endif

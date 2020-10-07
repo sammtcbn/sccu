@@ -91,8 +91,10 @@ void SCCU_service_unlock (char *lockfile);
 
 #ifdef __linux__
 int SCCU_is_process_running (pid_t pid);
+void SCCU_process_kill(pid_t pid);
 int SCCU_get_mac_addr_WithoutColon (char *m_szStrBuf, char *m_szIfName, int len);
 int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len);
+int SCCU_process_launch (pid_t *child_pid, char *processPath, char *processName, char *parameter);
 #endif
 
 void SCCU_get_module_path (char *fpath);
