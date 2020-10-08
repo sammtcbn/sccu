@@ -28,7 +28,7 @@ install:
 clean:
 	rm -f *.o libsccu.so* $(ALL_SAMPLE_BIN)
 
-ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get ex06_str_random ex07_str_combine_path_file ex08_str_array ex09_str_split_to_array ex10_is_process_running ex11_uptime_get ex12_process_launch ex13_write_buffer_to_file ex14_read_file_to_buffer ex15_remove_file
+ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get ex06_str_random ex07_str_combine_path_file ex08_str_array ex09_str_split_to_array ex10_is_process_running ex11_uptime_get ex12_process_launch ex13_write_buffer_to_file ex14_read_file_to_buffer ex15_remove_file ex16_folder_create
 
 sample: $(ALL_SAMPLE_BIN)
 
@@ -105,4 +105,9 @@ ex14_read_file_to_buffer.o: ex14_read_file_to_buffer.c
 ex15_remove_file: ex15_remove_file.o sccu.o
 	$(CC) $(LDFLAGS) -o $@ $^
 ex15_remove_file.o: ex15_remove_file.c
+	$(CC) $(CFLAGS) -c $<
+
+ex16_folder_create: ex16_folder_create.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex16_folder_create.o: ex16_folder_create.c
 	$(CC) $(CFLAGS) -c $<

@@ -838,3 +838,17 @@ void SCCU_remove_file (char *filepath)
     }
 #endif
 }
+
+int SCCU_folder_create (char *path)
+{
+#ifdef __linux__
+    struct stat st = {0};
+
+    if (stat(path, &st) == -1) {
+        mkdir(path, 0755);
+}
+#else
+    CreateDirectory(path,NULL);
+#endif
+    return 0;
+}

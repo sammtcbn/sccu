@@ -3,13 +3,13 @@
 
 void main (int argc, char *argv[])
 {
-    char *fn = NULL;
+    char *path = NULL;
     if (argc < 2)
     {
-        printf ("please assign a file\n");
+        printf ("please assign path\n");
         return;
     }
-    fn=argv[1];
-    SCCU_remove_file (fn);
+    path=argv[1];
+    SCCU_folder_create (path);
 }
 
