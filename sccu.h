@@ -102,5 +102,6 @@ void SCCU_get_module_path (char *fpath);
 void SCCU_hostname_get (char *name);
 int SCCU_write_buffer_to_file (char *filepath, char *buffer);
 char* SCCU_read_file_to_buffer (char *fn);
+void SCCU_remove_file (char *filepath);
 
 #endif // __SCCU_H__

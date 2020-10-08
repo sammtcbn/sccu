@@ -825,3 +825,16 @@ char* SCCU_read_file_to_buffer (char *fn)
     }
     return buffer;
 }
+
+void SCCU_remove_file (char *filepath)
+{
+#ifdef __linux__
+    if(access(filepath, F_OK) == 0)
+        remove(filepath);
+#else
+    if(filepath && strlen(filepath))
+    {
+        remove(filepath);
+    }
+#endif
+}
