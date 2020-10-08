@@ -852,3 +852,168 @@ int SCCU_folder_create (char *path)
 #endif
     return 0;
 }
+
+
+// refer to http://biosengineer.blogspot.com/2007/12/vc-windows-registry.html
+#ifdef _WINDOWS
+void SCCU_SetRegValueBy_REG_DWORD (LPCSTR szKeyPath,LPCSTR szKeyName,DWORD *dwData)
+{
+   HKEY hk;
+   if (RegCreateKey(HKEY_LOCAL_MACHINE,szKeyPath, &hk))
+      OutputDebugString("error!");
+      fprintf (stderr, "fail to create key\n");
+   if (RegSetValueEx(hk, szKeyName, 0, REG_DWORD, (LPBYTE) dwData, sizeof(DWORD)))
+      fprintf (stderr, "fail to create key\n");
+   RegCloseKey(hk);
+}
+#endif
+
+// refer to http://biosengineer.blogspot.com/2007/12/vc-windows-registry.html
+#ifdef _WINDOWS
+void SCCU_SetRegValueBy_REG_SZ (LPCSTR szKeyPath,LPCSTR szKeyName,LPCSTR keyValue)
+{
+   HKEY hk;
+   if (RegCreateKey(HKEY_LOCAL_MACHINE,szKeyPath, &hk))
+      fprintf (stderr, "fail to create key\n");
+   if (RegSetValueEx(hk, szKeyName,	0,	REG_SZ, (BYTE*)(LPCSTR) keyValue, strlen(keyValue)))
+      fprintf (stderr, "fail to create key\n");
+   RegCloseKey(hk);
+}
+#endif
+
+// refer to http://biosengineer.blogspot.com/2007/12/vc-windows-registry.html
+#ifdef _WINDOWS
+void SCCU_SetRegValueBy_REG_MULTI_SZ (LPCSTR szKeyPath,LPCSTR szKeyName,LPCSTR keyValue)
+{
+   HKEY hk;
+   if (RegCreateKey(HKEY_LOCAL_MACHINE,szKeyPath, &hk))
+      fprintf (stderr, "fail to create key\n");
+   if (RegSetValueEx(hk, szKeyName,	0,	REG_MULTI_SZ, (BYTE*)(LPCSTR) keyValue, strlen(keyValue)))
+      fprintf (stderr, "fail to create key\n");
+   RegCloseKey(hk);
+}
+#endif
+
+
+//refer to https://docs.microsoft.com/en-us/windows/win32/sysinfo/deleting-a-key-with-subkeys
+//*************************************************************
+//
+//  RegDelnodeRecurse()
+//
+//  Purpose:    Deletes a registry key and all it's subkeys / values.
+//
+//  Parameters: hKeyRoot    -   Root key
+//              lpSubKey    -   SubKey to delete
+//
+//  Return:     TRUE if successful.
+//              FALSE if an error occurs.
+//
+//*************************************************************
+#ifdef _WINDOWS
+BOOL SCCU_RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey)
+{
+    LPTSTR lpEnd;
+    LONG lResult;
+    DWORD dwSize;
+    TCHAR szName[MAX_PATH];
+    HKEY hKey;
+    FILETIME ftWrite;
+
+    // First, see if we can delete the key without having
+    // to recurse.
+
+    lResult = RegDeleteKey(hKeyRoot, lpSubKey);
+
+    if (lResult == ERROR_SUCCESS)
+        return TRUE;
+
+    lResult = RegOpenKeyEx (hKeyRoot, lpSubKey, 0, KEY_READ, &hKey);
+
+    if (lResult != ERROR_SUCCESS)
+    {
+        if (lResult == ERROR_FILE_NOT_FOUND) {
+            printf("Key not found.\n");
+            return TRUE;
+        }
+        else {
+            printf("Error opening key.\n");
+            return FALSE;
+        }
+    }
+
+    // Check for an ending slash and add one if it is missing.
+
+    lpEnd = lpSubKey + lstrlen(lpSubKey);
+
+    if (*(lpEnd - 1) != TEXT('\\'))
+    {
+        *lpEnd =  TEXT('\\');
+        lpEnd++;
+        *lpEnd =  TEXT('\0');
+    }
+
+    // Enumerate the keys
+
+    dwSize = MAX_PATH;
+    lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL,
+                           NULL, NULL, &ftWrite);
+
+    if (lResult == ERROR_SUCCESS)
+    {
+        do {
+
+            StringCchCopy (lpEnd, MAX_PATH*2, szName);
+
+            if (!RegDelnodeRecurse(hKeyRoot, lpSubKey)) {
+                break;
+            }
+
+            dwSize = MAX_PATH;
+
+            lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL,
+                                   NULL, NULL, &ftWrite);
+
+        } while (lResult == ERROR_SUCCESS);
+    }
+
+    lpEnd--;
+    *lpEnd = TEXT('\0');
+
+    RegCloseKey (hKey);
+
+    // Try again to delete the key.
+
+    lResult = RegDeleteKey(hKeyRoot, lpSubKey);
+
+    if (lResult == ERROR_SUCCESS)
+        return TRUE;
+
+    return FALSE;
+}
+#endif
+
+
+//refer to https://docs.microsoft.com/en-us/windows/win32/sysinfo/deleting-a-key-with-subkeys
+//*************************************************************
+//
+//  RegDelnode()
+//
+//  Purpose:    Deletes a registry key and all it's subkeys / values.
+//
+//  Parameters: hKeyRoot    -   Root key
+//              lpSubKey    -   SubKey to delete
+//
+//  Return:     TRUE if successful.
+//              FALSE if an error occurs.
+//
+//*************************************************************
+#ifdef _WINDOWS
+BOOL SCCU_RegDelnode (HKEY hKeyRoot, LPTSTR lpSubKey)
+{
+    TCHAR szDelKey[2 * MAX_PATH];
+
+    StringCchCopy (szDelKey, MAX_PATH*2, lpSubKey);
+    return RegDelnodeRecurse(hKeyRoot, szDelKey);
+
+}
+#endif

@@ -25,6 +25,7 @@
 #include <io.h>
 #include <conio.h>
 #include <stdint.h>
+#include <strsafe.h>
 #endif
 
 
@@ -89,6 +90,12 @@ int SCCU_pidfile_create (char *path);
 void SCCU_pidfile_remove (char *path);
 int SCCU_service_lock (char *lockfile);
 void SCCU_service_unlock (char *lockfile);
+void SCCU_get_module_path (char *fpath);
+void SCCU_hostname_get (char *name);
+int SCCU_write_buffer_to_file (char *filepath, char *buffer);
+char* SCCU_read_file_to_buffer (char *fn);
+void SCCU_remove_file (char *filepath);
+int SCCU_folder_create (char *path);
 
 #ifdef __linux__
 int SCCU_is_process_running (pid_t pid);
@@ -98,11 +105,12 @@ int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len);
 int SCCU_process_launch (pid_t *child_pid, char *processPath, char *processName, char *parameter);
 #endif
 
-void SCCU_get_module_path (char *fpath);
-void SCCU_hostname_get (char *name);
-int SCCU_write_buffer_to_file (char *filepath, char *buffer);
-char* SCCU_read_file_to_buffer (char *fn);
-void SCCU_remove_file (char *filepath);
-int SCCU_folder_create (char *path);
+#ifdef _WINDOWS
+void SCCU_SetRegValueBy_REG_DWORD (LPCSTR szKeyPath,LPCSTR szKeyName,DWORD *dwData);
+void SCCU_SetRegValueBy_REG_SZ (LPCSTR szKeyPath,LPCSTR szKeyName,LPCSTR keyValue);
+void SCCU_SetRegValueBy_REG_MULTI_SZ (LPCSTR szKeyPath,LPCSTR szKeyName,LPCSTR keyValue);
+BOOL SCCU_RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey);
+BOOL SCCU_RegDelnode (HKEY hKeyRoot, LPTSTR lpSubKey);
+#endif
 
 #endif // __SCCU_H__
