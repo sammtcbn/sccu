@@ -100,5 +100,6 @@ int SCCU_process_launch (pid_t *child_pid, char *processPath, char *processName,
 void SCCU_get_module_path (char *fpath);
 void SCCU_hostname_get (char *name);
 int SCCU_write_buffer_to_file (char *filepath, char *buffer);
+char* SCCU_read_file_to_buffer (char *fn);
 
 #endif // __SCCU_H__

@@ -784,3 +784,34 @@ int SCCU_write_buffer_to_file (char *filepath, char *buffer)
 
     return 1;
 }
+
+
+char* SCCU_read_file_to_buffer (char *fn)
+{
+    char * buffer = 0;
+    long length;
+    FILE * f = fopen (fn, "rb");
+
+    if (f)
+    {
+        fseek (f, 0, SEEK_END);
+        length = ftell (f);
+        fseek (f, 0, SEEK_SET);
+        buffer = malloc (length);
+        if (buffer)
+        {
+            fread (buffer, 1, length, f);
+            //buffer[length] = 0;
+        }
+        else
+        {
+            return NULL;
+        }
+        fclose (f);
+    }
+    else
+    {
+        return NULL;
+    }
+    return buffer;
+}
