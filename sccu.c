@@ -767,3 +767,20 @@ int SCCU_process_launch (pid_t *child_pid, char *processPath, char *processName,
     return 1;
 }
 #endif
+
+
+int SCCU_write_buffer_to_file (char *filepath, char *buffer)
+{
+    FILE *pFile;
+
+    pFile = fopen(filepath, "w");
+    if (pFile==NULL)
+        return -1;
+
+    fprintf(pFile, "%s\n", buffer);
+
+    if (pFile)
+        fclose (pFile);
+
+    return 1;
+}
