@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include "sccu.h"
 
 void main (int argc, char *argv[])
@@ -14,5 +14,15 @@ void main (int argc, char *argv[])
     fn=argv[1];
     buffer = SCCU_read_file_to_buffer (fn);
     if (buffer != NULL)
+    {
         printf ("%s", buffer);
+        free (buffer);
+    }
 }
+
+/* Result:
+
+$ ./ex14_read_file_to_buffer /etc/hostname
+sampc
+
+*/

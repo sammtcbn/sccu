@@ -378,6 +378,16 @@ void SCCU_str_split_to_array (char **arr, char *str, const char *delimiter, int 
 }
 
 
+void SCCU_str_showhex (char *str)
+{
+    int i=0;
+    for (i=0;i<strlen(str);i++)
+    {
+        fprintf (stderr, "[%d] %c  ascii=%02x\n", i, str[i], str[i]);
+    }
+}
+
+
 int SCCU_int_setmask (int val, int bitNum, int bitwise)
 {
 	//fprintf (stderr, "val=%x, bitNum=%d, bitwise=%d\n", val, bitNum, bitwise);
