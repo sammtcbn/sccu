@@ -11,6 +11,7 @@
 
 #ifdef __linux__
 #include <sys/wait.h>
+#include <sys/stat.h>
 #endif
 
 #include "sccu.h"
@@ -843,9 +844,10 @@ int SCCU_folder_create (char *path)
 {
 #ifdef __linux__
     struct stat st = {0};
+    mode_t mode = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
 
     if (stat(path, &st) == -1) {
-        mkdir(path, 0755);
+        mkdir(path, mode);
 }
 #else
     CreateDirectory(path,NULL);
