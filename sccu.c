@@ -856,6 +856,17 @@ int SCCU_folder_create (char *path)
 }
 
 
+#ifdef __linux__
+int SCCU_file_mode_as_public_read (char *filepath)
+{
+    int ret;
+    mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+    ret = chmod (filepath, mode);
+    return ret;
+}
+#endif
+
+
 // refer to http://biosengineer.blogspot.com/2007/12/vc-windows-registry.html
 #ifdef _WINDOWS
 void SCCU_SetRegValueBy_REG_DWORD (LPCSTR szKeyPath,LPCSTR szKeyName,DWORD *dwData)
