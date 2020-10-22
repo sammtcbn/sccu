@@ -844,7 +844,7 @@ int SCCU_folder_create (char *path)
 {
 #ifdef __linux__
     struct stat st = {0};
-    mode_t mode = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
+    mode_t mode = S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
 
     if (stat(path, &st) == -1) {
         mkdir(path, mode);
@@ -857,7 +857,7 @@ int SCCU_folder_create (char *path)
 
 
 #ifdef __linux__
-int SCCU_file_mode_as_public_read (char *filepath)
+int SCCU_file_mode_as_public (char *filepath)
 {
     int ret;
     mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
@@ -866,6 +866,15 @@ int SCCU_file_mode_as_public_read (char *filepath)
 }
 #endif
 
+#ifdef __linux__
+int SCCU_folder_mode_as_public (char *path)
+{
+    int ret;
+    mode_t mode = S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
+    ret = chmod (path, mode);
+    return ret;
+}
+#endif
 
 // refer to http://biosengineer.blogspot.com/2007/12/vc-windows-registry.html
 #ifdef _WINDOWS

@@ -11,7 +11,7 @@ void main (int argc, char *argv[])
         return;
     }
     fn=argv[1];
-    ret = SCCU_file_mode_as_public_read (fn);
+    ret = SCCU_file_mode_as_public (fn);
     if (ret == 0)
         printf ("successful\n");
     else

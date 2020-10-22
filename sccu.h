@@ -95,7 +95,8 @@ void SCCU_hostname_get (char *name);
 int SCCU_write_buffer_to_file (char *filepath, char *buffer);
 char* SCCU_read_file_to_buffer (char *fn);
 void SCCU_remove_file (char *filepath);
-int SCCU_file_mode_as_public_read (char *filepath);
+int SCCU_file_mode_as_public (char *filepath);
+int SCCU_folder_mode_as_public (char *path);
 int SCCU_folder_create (char *path);
 
 #ifdef __linux__
