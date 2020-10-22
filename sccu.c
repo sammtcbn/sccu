@@ -860,7 +860,7 @@ int SCCU_folder_create (char *path)
 int SCCU_file_mode_as_public (char *filepath)
 {
     int ret;
-    mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+    mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
     ret = chmod (filepath, mode);
     return ret;
 }
