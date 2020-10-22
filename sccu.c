@@ -876,6 +876,66 @@ int SCCU_folder_mode_as_public (char *path)
 }
 #endif
 
+#define   SERVICE_FILE_TEMPLATE  "[Unit]\nDescription=%s\nAfter=network.target systemd-sysctl.service systemd-modules-load.service\n\n[Service]\nUser=root\nWorkingDirectory=%s\nRestart=no\nType=simple\nExecStart=%s %s\nRemainAfterExit=true\nStandardOutput=null\n\n[Install]\nWantedBy=multi-user.target\n"
+
+/* service file sample
+[Unit]
+Description=this is test
+After=network.target systemd-sysctl.service systemd-modules-load.service
+
+[Service]
+User=root
+WorkingDirectory=/usr/local/sammtcbn/test
+Restart=no
+Type=simple
+ExecStart=/usr/local/sammtcbn/test/node index.js
+RemainAfterExit=true
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
+*/
+#ifdef __linux__
+int SCCU_service_file_generate (char *servicename, char *desc, char *workingdirectory, char *exepath, char *param)
+{
+    int ret=0;
+    char dest[MAX_PATH];    // ex: /etc/systemd/system/demo.service
+    char buffer[1024];
+
+   SCCU_str_combine_path_file (dest, "/etc/systemd/system", servicename);
+   strcat (dest, ".service");
+   sprintf (buffer, SERVICE_FILE_TEMPLATE, servicename, workingdirectory, exepath, param);
+
+   //fprintf (stderr, "file is %s\n", dest);
+   //fprintf (stderr, "content=\n%s\n", buffer);
+
+   if (SCCU_write_buffer_to_file (dest, buffer) == 1)
+   {
+        SCCU_file_mode_as_public (dest);
+        ret = 0;
+        //fprintf (stderr, "write %s ok\n", dest);
+   }
+   else
+   {
+        ret = -1;
+        //fprintf (stderr, "write %s fail\n", dest);
+   }
+   return ret;
+}
+#endif
+
+#ifdef __linux__
+int SCCU_service_file_remove (char *servicename)
+{
+    int ret=0;
+    char dest[MAX_PATH];    // ex: /etc/systemd/system/demo.service
+    SCCU_str_combine_path_file (dest, "/etc/systemd/system", servicename);
+    strcat (dest, ".service");
+    SCCU_remove_file (dest);
+    return ret;
+}
+#endif
+
 // refer to http://biosengineer.blogspot.com/2007/12/vc-windows-registry.html
 #ifdef _WINDOWS
 void SCCU_SetRegValueBy_REG_DWORD (LPCSTR szKeyPath,LPCSTR szKeyName,DWORD *dwData)

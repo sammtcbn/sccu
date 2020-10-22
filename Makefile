@@ -28,7 +28,7 @@ install:
 clean:
 	rm -f *.o libsccu.so* $(ALL_SAMPLE_BIN)
 
-ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get ex06_str_random ex07_str_combine_path_file ex08_str_array ex09_str_split_to_array ex10_is_process_running ex11_uptime_get ex12_process_launch ex13_write_buffer_to_file ex14_read_file_to_buffer ex15_remove_file ex16_folder_create ex18_file_mode_as_public
+ALL_SAMPLE_BIN=ex01_localtime_get ex02_getch ex03_str_reverse ex04_get_module_path ex05_hostname_get ex06_str_random ex07_str_combine_path_file ex08_str_array ex09_str_split_to_array ex10_is_process_running ex11_uptime_get ex12_process_launch ex13_write_buffer_to_file ex14_read_file_to_buffer ex15_remove_file ex16_folder_create ex18_file_mode_as_public ex19_service_file_generate ex20_service_file_remove
 
 sample: $(ALL_SAMPLE_BIN)
 
@@ -115,4 +115,14 @@ ex16_folder_create.o: ex16_folder_create.c
 ex18_file_mode_as_public: ex18_file_mode_as_public.o sccu.o
 	$(CC) $(LDFLAGS) -o $@ $^
 ex18_file_mode_as_public.o: ex18_file_mode_as_public.c
+	$(CC) $(CFLAGS) -c $<
+
+ex19_service_file_generate: ex19_service_file_generate.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex19_service_file_generate.o: ex19_service_file_generate.c
+	$(CC) $(CFLAGS) -c $<
+
+ex20_service_file_remove: ex20_service_file_remove.o sccu.o
+	$(CC) $(LDFLAGS) -o $@ $^
+ex20_service_file_remove.o: ex20_service_file_remove.c
 	$(CC) $(CFLAGS) -c $<

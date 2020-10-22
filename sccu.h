@@ -95,8 +95,6 @@ void SCCU_hostname_get (char *name);
 int SCCU_write_buffer_to_file (char *filepath, char *buffer);
 char* SCCU_read_file_to_buffer (char *fn);
 void SCCU_remove_file (char *filepath);
-int SCCU_file_mode_as_public (char *filepath);
-int SCCU_folder_mode_as_public (char *path);
 int SCCU_folder_create (char *path);
 
 #ifdef __linux__
@@ -105,6 +103,10 @@ void SCCU_process_kill(pid_t pid);
 int SCCU_get_mac_addr_WithoutColon (char *m_szStrBuf, char *m_szIfName, int len);
 int SCCU_get_mac_addr_WithColon (char *m_szStrBuf, char *m_szIfName, int len);
 int SCCU_process_launch (pid_t *child_pid, char *processPath, char *processName, char *parameter);
+int SCCU_file_mode_as_public (char *filepath);
+int SCCU_folder_mode_as_public (char *path);
+int SCCU_service_file_generate (char *servicename, char *desc, char *workingdirectory, char *exepath, char *param);
+int SCCU_service_file_remove (char *servicename);
 #endif
 
 #ifdef _WINDOWS
